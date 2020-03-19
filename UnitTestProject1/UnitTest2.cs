@@ -20,6 +20,14 @@ namespace UnitTestProject1
             command.Received().Execute();
             ((IDisposable)command).Received().Dispose();
         }
+
+        [Test]
+        public void Test_ForDelegate()
+        {
+            var func = Substitute.For<Func<string>>();
+            func().Returns("hello");
+            "hello".Should().Be(func());
+        }
     }
 
     public interface ICommand: IDisposable
@@ -29,7 +37,7 @@ namespace UnitTestProject1
 
     class CommandRunner
     {
-        private ICommand _command;
+        private readonly ICommand _command;
 
         public CommandRunner(ICommand command)
         {
