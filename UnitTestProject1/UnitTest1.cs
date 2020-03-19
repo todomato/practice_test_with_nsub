@@ -90,6 +90,7 @@ namespace UnitTestProject1
             calculator.PoweringUp += Raise.Event();
             eventWasRaised.Should().BeTrue();
         }
+
     }
 
     public interface ICalculator
