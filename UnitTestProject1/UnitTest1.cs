@@ -1,5 +1,7 @@
-﻿using FluentAssertions;
+﻿using System;
+using FluentAssertions;
 using NSubstitute;
+using NSubstitute.Core;
 using NUnit.Framework;
 
 namespace UnitTestProject1
@@ -7,7 +9,7 @@ namespace UnitTestProject1
     public class UnitTest1
     {
         [Test]
-        public void Test1()
+        public void Test_should_be()
         {
             const int actual = 1;
             const int expected = 1;
@@ -15,7 +17,7 @@ namespace UnitTestProject1
         }
 
         [Test]
-        public void Test2()
+        public void Test_Add()
         {
             var calculator = Substitute.For<ICalculator>();
             calculator.Add(1, 2).Returns(3);
@@ -66,11 +68,34 @@ namespace UnitTestProject1
             var actual = calculator.Add(5, 10);
             actual.Should().Be(15);
         }
+
+        [Test]
+        public void Test_MutipleValue()
+        {
+            ICalculator calculator = Substitute.For<ICalculator>();
+            calculator.Mode.Returns("HEX", "DEC", "BIN");
+
+            "HEX".Should().Be(calculator.Mode);
+            "DEC".Should().Be(calculator.Mode);
+            "BIN".Should().Be(calculator.Mode);
+        }
+
+        [Test]
+        public void Test_RaiseEvents()
+        {
+            ICalculator calculator = Substitute.For<ICalculator>();
+            bool eventWasRaised = false;
+            calculator.PoweringUp += (sender, args) => { eventWasRaised = true; };
+
+            calculator.PoweringUp += Raise.Event();
+            eventWasRaised.Should().BeTrue();
+        }
     }
 
     public interface ICalculator
     {
         int Add(int a, int b);
         string Mode { get; set; }
+        event EventHandler PoweringUp;
     }
 }
